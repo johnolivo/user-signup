@@ -20,11 +20,17 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         username= "Joe"
         text_area = "<textarea>" + username + "</textarea>"
-
         #Table
         username = "<td>""username""</td>"
         username_row = "<tr>" + username + "</tr>"
-        table_body = "<tbody>" + username_row + "</tbody>"
+        password = "<td>""password""</td>"
+        password_row ="<tr>" + password + "</tr>"
+        verify_password = "<td>""Verify Password""</td>"
+        verify_password_row ="<tr>" + verify_password + "</tr>"
+        email = "<td>""email""</td>"
+        email_row ="<tr>" + email + "</tr>"
+
+        table_body = "<tbody>" + username_row + password_row + verify_password_row + email_row + "</tbody>"
         table = "<table>" + table_body + "</table>"
 
         submit = "<input type='submit'/>"
