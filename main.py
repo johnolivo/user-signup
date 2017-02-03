@@ -20,8 +20,15 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         username= "Joe"
         text_area = "<textarea>" + username + "</textarea>"
+
+        #Table
+        username = "<td>""username""</td>"
+        username_row = "<tr>" + username + "</tr>"
+        table_body = "<tbody>" + username_row + "</tbody>"
+        table = "<table>" + table_body + "</table>"
+
         submit = "<input type='submit'/>"
-        form = "<form>" + text_area + submit + "</form>"
+        form = "<form>" + table + "</form>"
         self.response.write(form)
 
     #def post(self):
