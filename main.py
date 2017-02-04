@@ -16,12 +16,27 @@
 #
 import webapp2
 
+def create_table_row(label,input):
+    row_label = "<td>" "<class ='label'>" + label + "</td>"
+    row_intermediate_step = "<tr>" + row_label
+    row_label_input = "<td>" "<input type='text' name='label' value =" + input + ">" + "</td>" + "</tr>"
+    return row_intermediate_step + row_label_input
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        username= "Joe"
-        text_area = "<textarea>" + username + "</textarea>"
+        username = "Username"
+        password = "Password"
+        verify_password = "Verify Password"
+        email = "Email (Optional)"
+        #text_area = "<textarea>" + username + "</textarea>"
+        test = "Hello"
+        #TableTest
+        row_1 = create_table_row(username,test)
+        row_2 = create_table_row(password,test)
+        row_3 = create_table_row(verify_password,test)
+        row_4 = create_table_row(email,test)
         #Table
-        username = "<td>""username""</td>"
+        username = "<td class ='label'>""username""</td>"
         username_row = "<tr>" + username + "</tr>"
         password = "<td>""password""</td>"
         password_row ="<tr>" + password + "</tr>"
@@ -30,7 +45,10 @@ class MainHandler(webapp2.RequestHandler):
         email = "<td>""email""</td>"
         email_row ="<tr>" + email + "</tr>"
 
-        table_body = "<tbody>" + username_row + password_row + verify_password_row + email_row + "</tbody>"
+        table_body = ("<tbody>" + username_row + password_row + verify_password_row + email_row +
+        row_1 + row_2 + row_3 + row_4 +
+
+        "</tbody>")
         table = "<table>" + table_body + "</table>"
 
         submit = "<input type='submit'/>"
