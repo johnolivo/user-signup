@@ -26,16 +26,28 @@
 import webapp2
 import re
 #VALIDATION??
-USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
-def valid_username(username):
-    return USER_RE.match(username).group(0)
+# USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+# def valid_username(username):
+#     return username && USER_RE.match(username)
+#
+# def valid_input(item):
+#     if not valid_username(item):
+#         return "invalid username"
+
+
 #TABLE ROW OUTLINE
-def create_table_row(label,input, validation):
+def create_table_row(label,input):
+    label = "<td class ='label'>" + label + "</td>"
+    input = "<td>" "<input type ='text' name= 'label' value =" + input + ">" + "</td>" + "</tr>"
+    #validation = "<td class = 'error'>" + valid_input(validation) + "</tr>"
+    #row_label_input = "<td>" "<input type='text' name='label' value =" + input + ">" + "</td>" + "</tr>"
+    return label + input #row_intermediate_step + row_label_input
+def create_table_row_with_validation(label,input, validation):
     label = "<td class ='label'>" + label + "</td>"
     input = "<td>" "<input type ='text' name= 'label' value =" + input + ">" + "</td>" #+ "</tr>"
-    validation = "<td class = 'error'>" + str(valid_username(validation)) + "</tr>"
+    validation = "<td class = 'error'>" + "</tr>" #valid_input(validation) + "</tr>"
     #row_label_input = "<td>" "<input type='text' name='label' value =" + input + ">" + "</td>" + "</tr>"
-    return label + input + validation #row_intermediate_step + row_label_input
+    return label + input + validation
 #MAIN FUNCTION
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -45,25 +57,47 @@ class MainHandler(webapp2.RequestHandler):
         verify_password = "Verify Password"
         email = "Email (Optional)"
         #SAMPLE INPUTS
-        test = "test"
-        validation = 'test validation'
+        #test = "test"
+        #validation = 'test validation'
         #Table rows
-        row_1 = create_table_row(username,"",test)
-        row_2 = create_table_row(password,"",test)
-        row_3 = create_table_row(verify_password,"",test)
-        row_4 = create_table_row(email,"",test)
+        row_1 = create_table_row(username,"")
+        row_2 = create_table_row(password,"")
+        row_3 = create_table_row(verify_password,"")
+        row_4 = create_table_row(email,"")
         #table structure
         table_body = ("<tbody>" + row_1 + row_2 + row_3 + row_4 + "</tbody>")
         table = "<table>" + table_body + "</table>"
 
         submit = "<input type='submit'/>"
-        form = "<form>" + table + "</form>"
+        form = "<form>" + table + submit + "</form>"
         #OTHER PARTS
         header = "<h2>User Signup</h2>"
-        submit_button = "<input type= 'submit'/>"
+        self.response.write(header + form)
 
+    def get(post):
+        #Table row labels
+        username = "Username"
+        password = "Password"
+        verify_password = "Verify Password"
+        email = "Email (Optional)"
+        #SAMPLE INPUTS
+        test = "test"
+        validation = 'test validation'
+        #Table rows
+        row_1 = create_table_row_with_validation(username,"",test)
+        row_2 = create_table_row_with_validation(password,"",test)
+        row_3 = create_table_row_with_validation(verify_password,"",test)
+        row_4 = create_table_row_with_validation(email,"",test)
+        #table structure
+        table_body = ("<tbody>" + row_1 + row_2 + row_3 + row_4 + "</tbody>")
+        table = "<table>" + table_body + "</table>"
 
-        self.response.write(header + form + submit_button)
+        submit = "<input type='submit'/>"
+        form = "<form>" + table + submit + "</form>"
+        #OTHER PARTS
+        header = "<h2>User Signup</h2>"
+        post.response.write(header + form)
+
 
     #def post(self):
         #return "<h2>"Thanks for signing up"<h2>"
