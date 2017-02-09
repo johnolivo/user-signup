@@ -92,32 +92,39 @@ form ="""
 Sign Up
 </title>
     <body>
+        <h2>
+            Welcome! Please enter your information below
+        </h2>
         <form method = 'post'>
             <table>
                 <tbody>
                     <tr>
                         <td class = 'label'>Username</td>
-                        <td><input type = 'text' name = username value></td>
+                        <td><input type = 'text' name = username value = "%(username)s"></td>
                         <td class = 'error'>
-                            <div>%(error)s </div>
+                            <div>%(Uerror)s </div>
                         </td>
                     </tr>
                     <tr>
                         <td class = 'label'>Password</td>
-                        <td><input type = 'password' name = password_value></td>
+                        <td><input type = 'password' name = password value = "%(password)s"></td>
                         <td class = 'error'>
-                            <div>%(error)s </div>
+                            <div>%(Perror)s </div>
                         </td>
                     </tr>
                     <tr>
                         <td class = 'label'>Verify Password</td>
-                        <td><input type = 'password' name = verify_password_value></td>
-                        <td class = 'error'></td>
+                        <td><input type = 'password' name = verify_password value ="%(verify_password)s"></td>
+                        <td class = 'error'>
+                        <div>%(VPerror)s </div>
+                        </td>
                     </tr>
                     <tr>
                         <td class = 'label'>Email (Optional)</td>
-                        <td><input type = 'text' name = email_value></td>
-                        <td class = 'error'></td>
+                        <td><input type = 'text' name = email value = "%(email)s"></td>
+                        <td class = 'error'>
+                        <div>%(Eerror)s </div>
+                        </td>
                     </tr>
                 <tbody>
             </table>
@@ -133,11 +140,18 @@ def validate_username(username):
 def validate_password(password):
     return username_validation.match(password)
 def validate_email(email):
-    return email_validation.match(email)
+    return not email or email_validation.match(email)
 #Web Pages
 class MainHandler(webapp2.RequestHandler):
-    def write_form(self, error=""):
-        self.response.out.write(form % {"error": error})
+    def write_form(self, Uerror="", Perror="", VPerror="", Eerror="", username="", password="", verify_password="", email=""):
+        self.response.out.write(form % {"Uerror": Uerror,
+                                        "Perror": Perror,
+                                        "VPerror": VPerror,
+                                        "Eerror": Eerror,
+                                        "username": username,
+                                        "password": password,
+                                        "verify_password": verify_password,
+                                        "email": email})
 
     def get(self):
         self.write_form()
@@ -146,15 +160,33 @@ class MainHandler(webapp2.RequestHandler):
         #Gather inputs
         username_input = self.request.get('username')
         password_input = self.request.get('password')
+        verify_password_input = self.request.get('verify_password')
         email_input = self.request.get('email')
         #define which inputs are valid
         valid_username = validate_username(username_input)
         valid_password = validate_password(password_input)
+        valid_verify_password = validate_password(verify_password_input)
         valid_email = validate_email(email_input)
-        if not valid_username:
-            self.write_form("Invalid Username")
+        #What happens when there is an error
+        have_error = False
+        params = dict(username = username_input, email = email_input)
+        if not (username_input and valid_username):
+            params ['Uerror'] = "Please enter a valid username"
+            have_error = True
+        if not valid_password:
+            params ['Perror'] = "Please enter a valid password"
+            have_error = True
+        if not valid_verify_password:
+            params ['VPerror'] = "Passwords do not match"
+            have_error = True
+        if not (valid_email):
+            params ['Eerror'] = "Please enter a valid email"
+            have_error = True
+        if have_error:
+            self.write_form(**params)
+
         else:
-            self.response.write('Thanks for signing up!')
+            self.response.write("<h2>" + 'Thanks for signing up! ' + username_input + "</h2>")
 
 
 app = webapp2.WSGIApplication([
