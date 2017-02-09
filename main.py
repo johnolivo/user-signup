@@ -84,21 +84,9 @@
 
     #def post(self):
         #return "<h2>"Thanks for signing up"<h2>"
-
 import webapp2
 import re
-#Validation functions
-username_validation = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
-pasword_validation = re.compile("^.{3,20}$")
-email_verification = re.compile("^[\S]+@[\S]+.[\S]+$")
-def valid_username(username):
-    return username_validation.match(username)
-
-
-# def valid_input(item):
-#     if not valid_username(username):
-#         return "invalid username"
-#form
+#Form
 form ="""
 <title>
 Sign Up
@@ -110,21 +98,25 @@ Sign Up
                     <tr>
                         <td class = 'label'>Username</td>
                         <td><input type = 'text' name = username value></td>
-                        <td class = 'error'></td>
+                        <td class = 'error'>
+                            <div>%(error)s </div>
+                        </td>
                     </tr>
                     <tr>
                         <td class = 'label'>Password</td>
-                        <td><input type = 'password' name = password value></td>
-                        <td class = 'error'></td>
+                        <td><input type = 'password' name = password_value></td>
+                        <td class = 'error'>
+                            <div>%(error)s </div>
+                        </td>
                     </tr>
                     <tr>
                         <td class = 'label'>Verify Password</td>
-                        <td><input type = 'password' name = verify_password value></td>
+                        <td><input type = 'password' name = verify_password_value></td>
                         <td class = 'error'></td>
                     </tr>
                     <tr>
                         <td class = 'label'>Email (Optional)</td>
-                        <td><input type = 'text' name = email value></td>
+                        <td><input type = 'text' name = email_value></td>
                         <td class = 'error'></td>
                     </tr>
                 <tbody>
@@ -132,14 +124,37 @@ Sign Up
         <input type = 'submit'>
     </form>
 </body>"""
+#Validation functions
+username_validation = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+pasword_validation = re.compile("^.{3,20}$")
+email_validation = re.compile("^[\S]+@[\S]+.[\S]+$")
+def validate_username(username):
+    return username_validation.match(username)
+def validate_password(password):
+    return username_validation.match(password)
+def validate_email(email):
+    return email_validation.match(email)
+#Web Pages
 class MainHandler(webapp2.RequestHandler):
+    def write_form(self, error=""):
+        self.response.out.write(form % {"error": error})
+
     def get(self):
-        self.response.out.write(form)
+        self.write_form()
 
     def post(self):
-        username_input = valid_username(self.request.get('username'))
-
-        self.response.write('Thanks for signing up!')
+        #Gather inputs
+        username_input = self.request.get('username')
+        password_input = self.request.get('password')
+        email_input = self.request.get('email')
+        #define which inputs are valid
+        valid_username = validate_username(username_input)
+        valid_password = validate_password(password_input)
+        valid_email = validate_email(email_input)
+        if not valid_username:
+            self.write_form("Invalid Username")
+        else:
+            self.response.write('Thanks for signing up!')
 
 
 app = webapp2.WSGIApplication([
